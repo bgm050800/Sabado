@@ -2,11 +2,11 @@
 
 namespace SM_WEB.Models
 {
-    public class UsuarioModel(HttpClient http) : IUsuarioModel
+    public class UsuarioModel(HttpClient http, IConfiguration iConfiguration) : IUsuarioModel
     {
         public Respuesta RegistrarUsuario(Usuario ent)
         {
-            string url = "https://localhost:7208/api/Usuario/RegistrarUsuario";
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Usuario/RegistrarUsuario";
             JsonContent body = JsonContent.Create(ent);
             var result = http.PostAsync(url, body).Result;
 
@@ -18,7 +18,7 @@ namespace SM_WEB.Models
 
         public Respuesta IniciarSesion(Usuario ent)
         {
-            string url = "https://localhost:7208/api/Usuario/IniciarSesion";
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Usuario/IniciarSesion";
             JsonContent body = JsonContent.Create(ent);
             var result = http.PostAsync(url, body).Result;
 
