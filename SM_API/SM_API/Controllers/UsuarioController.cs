@@ -24,8 +24,8 @@ namespace SM_API.Controllers
 
             using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
             {
-                var result = await context.ExecuteAsync("RegistrarUsuario", 
-                    new { ent.Identificacion, ent.Correo, ent.Contrasenna, ent.Nombre }, 
+                var result = await context.ExecuteAsync("RegistrarUsuario",
+                    new { ent.Identificacion, ent.Correo, ent.Contrasenna, ent.Nombre },
                     commandType: System.Data.CommandType.StoredProcedure);
 
                 if (result > 0)
@@ -71,6 +71,36 @@ namespace SM_API.Controllers
                 {
                     resp.Codigo = 0;
                     resp.Mensaje = "La información del usuario no se encuentra registrada";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("ConsultarUsuarios")]
+        public async Task<IActionResult> ConsultarUsuarios()
+        {
+            Respuesta resp = new Respuesta();
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.QueryAsync<Usuario>("ConsultarUsuarios",
+                    new { },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result.Count() > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = result;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "No hay usuarios registrados en este momento.";
                     resp.Contenido = false;
                     return Ok(resp);
                 }

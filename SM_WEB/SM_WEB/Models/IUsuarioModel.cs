@@ -7,5 +7,7 @@ namespace SM_WEB.Models
         Respuesta RegistrarUsuario(Usuario ent);
 
         Respuesta IniciarSesion(Usuario ent);
+
+        Respuesta ConsultarUsuarios();
     }
 }
