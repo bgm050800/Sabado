@@ -60,6 +60,7 @@ namespace SM_WEB.Controllers
 
 
 
+        [FiltroSesiones]
         [HttpGet]
         public IActionResult Principal()
         {
@@ -68,6 +69,17 @@ namespace SM_WEB.Controllers
 
 
 
+        [FiltroSesiones]
+        [HttpGet]
+        public IActionResult SalirSistema()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index","Home");
+        }
+
+
+
+        [FiltroSesiones]
         [HttpGet]
         public IActionResult ConsultarUsuarios()
         {

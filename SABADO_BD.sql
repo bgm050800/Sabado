@@ -78,8 +78,10 @@ BEGIN
 			Correo,
 			Nombre,
 			Estado,
-			IdRol
-	  FROM	dbo.tUsuario
+			R.IdRol,
+			R.Descripcion
+	  FROM	dbo.tUsuario U
+	  INNER JOIN dbo.tRol R ON U.IdRol = R.IdRol
 
 END
 GO

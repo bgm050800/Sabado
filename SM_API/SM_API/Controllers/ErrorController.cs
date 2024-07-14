@@ -15,8 +15,7 @@ namespace SM_API.Controllers
         public IActionResult CatchException()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-
-            return Problem(detail: "", title: "");
+            return Problem(detail: context!.Error.Message, title: context.Path);
         }
     }
 }

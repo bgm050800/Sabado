@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/page/css/adminlte.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap4.css">
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -50,7 +51,7 @@
                             <i class="fa fa-lock mr-2"></i> Seguridad
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
+                        <a href="@Url.Action("SalirSistema","Home")" class="dropdown-item">
                             <i class="fa fa-door-open mr-2"></i> Salir
                         </a>
                     </div>
@@ -137,5 +138,8 @@
     <script src="~/page/jquery/jquery.min.js"></script>
     <script src="~/page/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/page/js/adminlte.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap4.js"></script>
+
 </body>
 </html>
