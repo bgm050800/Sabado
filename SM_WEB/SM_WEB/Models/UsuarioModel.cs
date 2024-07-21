@@ -43,5 +43,19 @@ namespace SM_WEB.Models
                 return new Respuesta();
         }
 
+        public Respuesta ConsultarUsuario(int Consecutivo)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Usuario/ConsultarUsuario?Consecutivo=" + Consecutivo;
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var result = http.GetAsync(url).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
     }
 }

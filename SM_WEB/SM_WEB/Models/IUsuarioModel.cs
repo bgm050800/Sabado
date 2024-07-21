@@ -9,5 +9,7 @@ namespace SM_WEB.Models
         Respuesta IniciarSesion(Usuario ent);
 
         Respuesta ConsultarUsuarios();
+
+        Respuesta ConsultarUsuario(int Consecutivo);
     }
 }

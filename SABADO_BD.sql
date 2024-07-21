@@ -38,14 +38,18 @@ INSERT [dbo].[tRol] ([IdRol], [Descripcion]) VALUES (1, N'Administrador')
 GO
 INSERT [dbo].[tRol] ([IdRol], [Descripcion]) VALUES (2, N'Usuario')
 GO
+INSERT [dbo].[tRol] ([IdRol], [Descripcion]) VALUES (3, N'Prueba')
+GO
 SET IDENTITY_INSERT [dbo].[tRol] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[tUsuario] ON 
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1003, N'304590415', N'ecalvo90415@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Eduardo Calvo Castillo', 1, 2)
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1003, N'304590415', N'ecalvo90415@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Eduardo Calvo Castillo', 1, 1)
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1004, N'117040465', N'bgonzalez40465@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Byron González Muñoz', 1, 2)
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1004, N'117040465', N'bgonzalez40465@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Byron González Muñoz', 1, 1)
+GO
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1005, N'117020932', N'bruiz20932@ufide.ac.cr', N'z2nKES8rL72jrxz8yssv5w==', N'Brandon Ruíz Miranda', 1, 2)
 GO
 SET IDENTITY_INSERT [dbo].[tUsuario] OFF
 GO
@@ -68,6 +72,37 @@ GO
 ALTER TABLE [dbo].[tUsuario] CHECK CONSTRAINT [FK_tUsuario_tRol]
 GO
 
+CREATE PROCEDURE [dbo].[ConsultarRoles]
+
+AS
+BEGIN
+
+	SELECT	IdRol 'value', Descripcion 'text'
+	FROM	tRol
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarUsuario]
+	@Consecutivo INT
+AS
+BEGIN
+
+	SELECT	Consecutivo,
+			Identificacion,
+			Correo,
+			Nombre,
+			Estado,
+			CASE WHEN Estado = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END EstadoDescripcion,
+			R.IdRol,
+			R.Descripcion
+	  FROM	dbo.tUsuario U
+	  INNER JOIN dbo.tRol R ON U.IdRol = R.IdRol
+	  WHERE Consecutivo = 	@Consecutivo
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[ConsultarUsuarios]
 
 AS
@@ -78,6 +113,7 @@ BEGIN
 			Correo,
 			Nombre,
 			Estado,
+			CASE WHEN Estado = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END EstadoDescripcion,
 			R.IdRol,
 			R.Descripcion
 	  FROM	dbo.tUsuario U
