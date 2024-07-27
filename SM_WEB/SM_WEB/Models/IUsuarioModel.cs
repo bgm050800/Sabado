@@ -11,5 +11,11 @@ namespace SM_WEB.Models
         Respuesta ConsultarUsuarios();
 
         Respuesta ConsultarUsuario(int Consecutivo);
+
+        Respuesta CambiarEstadoUsuario(Usuario ent);
+
+        Respuesta ActualizarUsuario(Usuario ent);
+
+        Respuesta RecuperarAcceso(string Identificacion);
     }
 }

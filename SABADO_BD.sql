@@ -25,6 +25,8 @@ CREATE TABLE [dbo].[tUsuario](
 	[Nombre] [varchar](100) NOT NULL,
 	[Estado] [bit] NOT NULL,
 	[IdRol] [tinyint] NOT NULL,
+	[EsTemporal] [bit] NULL,
+	[VigenciaTemporal] [datetime] NULL,
  CONSTRAINT [PK_tUsuario] PRIMARY KEY CLUSTERED 
 (
 	[Consecutivo] ASC
@@ -45,11 +47,11 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tUsuario] ON 
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1003, N'304590415', N'ecalvo90415@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Eduardo Calvo Castillo', 1, 1)
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1003, N'304590415', N'ecalvo90415@ufide.ac.cr', N'gWYGxPMLmwncMqU1dU1F9A==', N'Eduardo Calvo Castillo', 1, 1, 1, CAST(N'2024-07-27T11:38:59.820' AS DateTime))
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1004, N'117040465', N'bgonzalez40465@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Byron González Muñoz', 1, 1)
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1004, N'117040465', N'bgonzalez40465@ufide.ac.cr', N'14bOecF5ZzXCHaJAfUiw+A==', N'Byron Iván González Muñoz', 1, 1, NULL, NULL)
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol]) VALUES (1005, N'117020932', N'bruiz20932@ufide.ac.cr', N'z2nKES8rL72jrxz8yssv5w==', N'Brandon Ruíz Miranda', 1, 2)
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1005, N'117020932', N'bruiz20932@ufide.ac.cr', N'z2nKES8rL72jrxz8yssv5w==', N'Brandon José Ruíz Miranda', 1, 1, NULL, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[tUsuario] OFF
 GO
@@ -70,6 +72,61 @@ ALTER TABLE [dbo].[tUsuario]  WITH CHECK ADD  CONSTRAINT [FK_tUsuario_tRol] FORE
 REFERENCES [dbo].[tRol] ([IdRol])
 GO
 ALTER TABLE [dbo].[tUsuario] CHECK CONSTRAINT [FK_tUsuario_tRol]
+GO
+
+CREATE PROCEDURE [dbo].[ActualizarContrasenna] 
+	@Consecutivo INT ,
+	@Contrasenna VARCHAR(100),
+	@EsTemporal BIT,
+	@VigenciaTemporal DATETIME
+AS
+BEGIN
+
+	UPDATE tUsuario
+	   SET Contrasenna = @Contrasenna,
+		   EsTemporal = @EsTemporal,
+		   VigenciaTemporal = @VigenciaTemporal
+	 WHERE Consecutivo = @Consecutivo
+	
+END
+GO
+
+CREATE PROCEDURE [dbo].[ActualizarUsuario]
+	@Consecutivo INT,
+	@Identificacion VARCHAR(20),
+	@Nombre VARCHAR(100),
+	@Correo VARCHAR(100),
+	@IdRol TINYINT
+AS
+BEGIN
+	
+	IF NOT EXISTS(SELECT 1 FROM dbo.tUsuario WHERE (Correo = @Correo 
+												OR Identificacion = @Identificacion)
+												AND Consecutivo != @Consecutivo)
+	BEGIN
+
+		UPDATE tUsuario
+		   SET Identificacion = @Identificacion,
+			   Nombre = @Nombre,
+			   Correo = @Correo,
+			   IdRol = @IdRol
+		 WHERE Consecutivo = @Consecutivo
+
+	END
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[CambiarEstadoUsuario]
+	@Consecutivo INT
+AS
+BEGIN
+	
+	UPDATE tUsuario
+	SET Estado = CASE WHEN Estado = 1 THEN 0 ELSE 1 END
+	WHERE Consecutivo = @Consecutivo
+
+END
 GO
 
 CREATE PROCEDURE [dbo].[ConsultarRoles]
@@ -99,6 +156,26 @@ BEGIN
 	  FROM	dbo.tUsuario U
 	  INNER JOIN dbo.tRol R ON U.IdRol = R.IdRol
 	  WHERE Consecutivo = 	@Consecutivo
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarUsuarioIdentificacion]
+	@Identificacion VARCHAR(20)
+AS
+BEGIN
+
+	SELECT	Consecutivo,
+			Identificacion,
+			Correo,
+			Nombre,
+			Estado,
+			CASE WHEN Estado = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END EstadoDescripcion,
+			R.IdRol,
+			R.Descripcion
+	  FROM	dbo.tUsuario U
+	  INNER JOIN dbo.tRol R ON U.IdRol = R.IdRol
+	  WHERE Identificacion = @Identificacion
 
 END
 GO
@@ -133,7 +210,9 @@ BEGIN
 			Correo,
 			Nombre,
 			Estado,
-			IdRol
+			IdRol,
+			EsTemporal,
+			VigenciaTemporal
 	  FROM	dbo.tUsuario
 	  WHERE Correo = @Correo
 		AND Contrasenna = @Contrasenna
@@ -150,14 +229,15 @@ CREATE PROCEDURE [dbo].[RegistrarUsuario]
 AS
 BEGIN
 
-	DECLARE @Estado BIT = 1,
-			@Rol	TINYINT = 2
+	DECLARE @Estado		BIT = 1,
+			@Rol		TINYINT = 2,
+			@Temporal	TINYINT = 0
 
 	IF NOT EXISTS(SELECT 1 FROM dbo.tUsuario WHERE Correo = @Correo OR Identificacion = @Identificacion)
 	BEGIN
 
-		INSERT INTO dbo.tUsuario(Identificacion,Correo,Contrasenna,Nombre,Estado,IdRol)
-		VALUES(@Identificacion,@Correo,@Contrasenna,@Nombre,@Estado,@Rol)
+		INSERT INTO dbo.tUsuario(Identificacion,Correo,Contrasenna,Nombre,Estado,IdRol, EsTemporal, VigenciaTemporal)
+		VALUES(@Identificacion,@Correo,@Contrasenna,@Nombre,@Estado,@Rol,@Temporal,GETDATE())
 
 	END
 

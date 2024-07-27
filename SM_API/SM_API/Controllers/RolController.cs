@@ -1,10 +1,8 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using SM_API.Entitites;
 using SM_API.Models;
 
@@ -12,7 +10,7 @@ namespace SM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RolController(IConfiguration iConfiguration, IRolesModel iRolesModel) : ControllerBase
+    public class RolController(IConfiguration iConfiguration, IComunesModel iComunesModel) : ControllerBase
     {
 
         [Authorize]
@@ -20,7 +18,7 @@ namespace SM_API.Controllers
         [Route("ConsultarRoles")]
         public async Task<IActionResult> ConsultarRoles()
         {
-            if (!iRolesModel.EsAdministrador(User))
+            if (!iComunesModel.EsAdministrador(User))
                 return StatusCode(403);
 
             Respuesta resp = new Respuesta();

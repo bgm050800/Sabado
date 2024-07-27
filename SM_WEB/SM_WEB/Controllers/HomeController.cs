@@ -33,7 +33,7 @@ namespace SM_WEB.Controllers
                 return RedirectToAction("Principal", "Home");
             }
             else
-            { 
+            {
                 ViewBag.msj = respuesta.Mensaje;
                 return View();
             }
@@ -64,6 +64,28 @@ namespace SM_WEB.Controllers
 
 
 
+        [HttpGet]
+        public IActionResult RecuperarAcceso()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RecuperarAcceso(Usuario ent)
+        {
+            var respuesta = iUsuarioModel.RecuperarAcceso(ent.Identificacion!);
+
+            if (respuesta.Codigo == 1)
+                return RedirectToAction("Index", "Home");
+            else
+            {
+                ViewBag.msj = respuesta.Mensaje;
+                return View();
+            }
+        }
+
+
+
         [FiltroSesiones]
         [HttpGet]
         public IActionResult Principal()
@@ -78,7 +100,24 @@ namespace SM_WEB.Controllers
         public IActionResult SalirSistema()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
+        [FiltroSesiones]
+        [HttpPost]
+        public IActionResult CambiarEstadoUsuario(Usuario ent)
+        {
+            var respuesta = iUsuarioModel.CambiarEstadoUsuario(ent);
+
+            if (respuesta.Codigo == 1)
+                return RedirectToAction("ConsultarUsuarios", "Home");
+            else
+            {
+                ViewBag.msj = respuesta.Mensaje;
+                return View();
+            }
         }
 
 
@@ -97,6 +136,7 @@ namespace SM_WEB.Controllers
 
             return View(new List<Usuario>());
         }
+      
 
 
         [FiltroSesiones]
@@ -104,9 +144,7 @@ namespace SM_WEB.Controllers
         public IActionResult ActualizarUsuario(int q)
         {
             var respuesta = iUsuarioModel.ConsultarUsuario(q);
-            var roles = iRolesModel.ConsultarRoles();
-
-            ViewBag.Roles = JsonSerializer.Deserialize<List<SelectListItem>>((JsonElement)roles.Contenido!);
+            CargarViewBagRoles();
 
             if (respuesta.Codigo == 1)
             {
@@ -117,6 +155,27 @@ namespace SM_WEB.Controllers
             return View(new Usuario());
         }
 
+        [FiltroSesiones]
+        [HttpPost]
+        public IActionResult ActualizarUsuario(Usuario ent)
+        {
+            var respuesta = iUsuarioModel.ActualizarUsuario(ent);
+
+            if (respuesta.Codigo == 1)
+                return RedirectToAction("ConsultarUsuarios", "Home");
+            else
+            {
+                ViewBag.msj = respuesta.Mensaje;
+                CargarViewBagRoles();
+                return View();
+            }
+        }
+
+        private void CargarViewBagRoles()
+        {
+            var roles = iRolesModel.ConsultarRoles();
+            ViewBag.Roles = JsonSerializer.Deserialize<List<SelectListItem>>((JsonElement)roles.Contenido!);
+        }
 
     }
 }

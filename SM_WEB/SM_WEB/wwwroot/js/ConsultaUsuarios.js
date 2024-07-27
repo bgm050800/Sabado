@@ -5,4 +5,9 @@
             },
             columnDefs: [{ type: 'string', target: [0] }]
         });
-    });
+ });
+
+$(document).on("click", ".Modales", function () {
+  $("#Consecutivo").val($(this).attr("data-id"));
+  $("#Nombre").text($(this).attr("data-name"));
+});

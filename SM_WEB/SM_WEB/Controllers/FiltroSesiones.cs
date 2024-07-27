@@ -5,7 +5,6 @@ namespace SM_WEB.Controllers
 {
     public class FiltroSesiones : ActionFilterAttribute
     {
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.HttpContext.Session.GetString("TOKEN") == null)
@@ -19,6 +18,5 @@ namespace SM_WEB.Controllers
 
             base.OnActionExecuting(context);
         }
-
     }
 }

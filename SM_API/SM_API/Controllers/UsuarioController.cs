@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +13,7 @@ namespace SM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController(IConfiguration iConfiguration, IRolesModel iRolesModel) : ControllerBase
+    public class UsuarioController(IConfiguration iConfiguration, IComunesModel iComunesModel) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost]
@@ -83,7 +82,7 @@ namespace SM_API.Controllers
         [Route("ConsultarUsuarios")]
         public async Task<IActionResult> ConsultarUsuarios()
         {
-            if (!iRolesModel.EsAdministrador(User))
+            if (!iComunesModel.EsAdministrador(User))
                 return StatusCode(403);
 
             Respuesta resp = new Respuesta();
@@ -111,13 +110,12 @@ namespace SM_API.Controllers
             }
         }
 
-
         [Authorize]
         [HttpGet]
         [Route("ConsultarUsuario")]
         public async Task<IActionResult> ConsultarUsuario(int Consecutivo)
         {
-            if (!iRolesModel.EsAdministrador(User))
+            if (!iComunesModel.EsAdministrador(User))
                 return StatusCode(403);
 
             Respuesta resp = new Respuesta();
@@ -145,6 +143,111 @@ namespace SM_API.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPut]
+        [Route("CambiarEstadoUsuario")]
+        public async Task<IActionResult> CambiarEstadoUsuario(Usuario ent)
+        {
+            if (!iComunesModel.EsAdministrador(User))
+                return StatusCode(403);
+
+            Respuesta resp = new Respuesta();
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.ExecuteAsync("CambiarEstadoUsuario",
+                    new { ent.Consecutivo },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = true;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "El estado del usuario no se pudo actualizar";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("ActualizarUsuario")]
+        public async Task<IActionResult> ActualizarUsuario(Usuario ent)
+        {
+            if (!iComunesModel.EsAdministrador(User))
+                return StatusCode(403);
+
+            Respuesta resp = new Respuesta();
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.ExecuteAsync("ActualizarUsuario",
+                    new { ent.Consecutivo, ent.Identificacion, ent.Nombre, ent.Correo, ent.IdRol },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = true;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "La información del usuario no se pudo actualizar";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
+
+        [HttpGet]
+        [Route("RecuperarAcceso")]
+        public async Task<IActionResult> RecuperarAcceso(string Identificacion)
+        {
+            Respuesta resp = new Respuesta();
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.QueryFirstOrDefaultAsync<Usuario>("ConsultarUsuarioIdentificacion",
+                    new { Identificacion },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result != null)
+                {
+                    var codigoAleatorio = iComunesModel.GenerarCodigo();
+                    var Contrasenna = iComunesModel.Encrypt(codigoAleatorio);
+                    var EsTemporal = true;
+                    var VigenciaTemporal = DateTime.Now.AddMinutes(30);
+
+                    await context.ExecuteAsync("ActualizarContrasenna",
+                    new { result.Consecutivo, Contrasenna, EsTemporal, VigenciaTemporal },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                    iComunesModel.EnviarCorreo(result.Correo!, "Recuperar Acceso Sistema", "Su código de acceso temporal es:" + codigoAleatorio);
+
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = result;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "No hay usuarios registrados con esa identificación.";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
 
         private string GenerarToken(int Consecutivo, int Rol)
         {

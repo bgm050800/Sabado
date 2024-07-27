@@ -57,5 +57,49 @@ namespace SM_WEB.Models
                 return new Respuesta();
         }
 
+        public Respuesta CambiarEstadoUsuario(Usuario ent)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Usuario/CambiarEstadoUsuario";
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            JsonContent body = JsonContent.Create(ent);
+            var result = http.PutAsync(url, body).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
+        public Respuesta ActualizarUsuario(Usuario ent)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Usuario/ActualizarUsuario";
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            JsonContent body = JsonContent.Create(ent);
+            var result = http.PutAsync(url, body).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
+        public Respuesta RecuperarAcceso(string Identificacion)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Usuario/RecuperarAcceso?Identificacion=" + Identificacion;
+
+            var result = http.GetAsync(url).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+        
+
+
     }
 }
