@@ -26,6 +26,16 @@ namespace SM_WEB.Controllers
             if (respuesta.Codigo == 1)
             {
                 var datos = JsonSerializer.Deserialize<Usuario>((JsonElement)respuesta.Contenido!);
+
+                if (datos!.EsTemporal)
+                {
+                    if (datos!.VigenciaTemporal < DateTime.Now)
+                    {
+                        ViewBag.msj = "Su contraseña temporal ha caducado";
+                        return View();
+                    }
+                }
+
                 HttpContext.Session.SetString("TOKEN", datos!.Token!);
                 HttpContext.Session.SetString("NOMBRE", datos!.Nombre!);
                 HttpContext.Session.SetInt32("ROL", datos!.IdRol);

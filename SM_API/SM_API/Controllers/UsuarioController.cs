@@ -13,7 +13,7 @@ namespace SM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController(IConfiguration iConfiguration, IComunesModel iComunesModel) : ControllerBase
+    public class UsuarioController(IConfiguration iConfiguration, IComunesModel iComunesModel, IHostEnvironment iHost) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost]
@@ -232,7 +232,14 @@ namespace SM_API.Controllers
                     new { result.Consecutivo, Contrasenna, EsTemporal, VigenciaTemporal },
                     commandType: System.Data.CommandType.StoredProcedure);
 
-                    iComunesModel.EnviarCorreo(result.Correo!, "Recuperar Acceso Sistema", "Su código de acceso temporal es:" + codigoAleatorio);
+                    string ruta = Path.Combine(iHost.ContentRootPath, "FormatoCorreo.html");
+                    var html = System.IO.File.ReadAllText(ruta);
+
+                    html = html.Replace("@@Nombre", result.Nombre);
+                    html = html.Replace("@@Contrasenna", codigoAleatorio);
+                    html = html.Replace("@@Vencimiento", VigenciaTemporal.ToString("dd/MM/yyyy HH:mm"));
+
+                    iComunesModel.EnviarCorreo(result.Correo!, "Recuperar Acceso Sistema", html);
 
                     resp.Codigo = 1;
                     resp.Mensaje = "OK";
