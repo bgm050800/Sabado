@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace SM_WEB.Controllers
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class HomeController(IUsuarioModel iUsuarioModel, IComunModel iComunModel, IRolesModel iRolesModel) : Controller
+    public class HomeController(IUsuarioModel iUsuarioModel, IComunModel iComunModel, IRolesModel iRolesModel, IProductoModel iProductoModel) : Controller
     {
         [HttpGet]
         public IActionResult Index()
@@ -100,7 +100,15 @@ namespace SM_WEB.Controllers
         [HttpGet]
         public IActionResult Principal()
         {
-            return View();
+            var respuesta = iProductoModel.ConsultarProductos();
+
+            if (respuesta.Codigo == 1)
+            {
+                var datos = JsonSerializer.Deserialize<List<Producto>>((JsonElement)respuesta.Contenido!);
+                return View(datos);
+            }
+
+            return View(new List<Producto>());
         }
 
 
