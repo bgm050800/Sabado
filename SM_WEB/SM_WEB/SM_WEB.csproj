@@ -8,14 +8,17 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\ConsultaUsuarios.js" />
+    <Content Remove="wwwroot\js\ProductosCards.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\ConsultaUsuarios.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\ProductosCards.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\ConsultaUsuarios.js" />
+    <None Include="wwwroot\js\ProductosCards.js" />
   </ItemGroup>
 
   <ItemGroup>

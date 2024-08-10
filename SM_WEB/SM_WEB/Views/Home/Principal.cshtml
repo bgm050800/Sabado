@@ -18,14 +18,35 @@
             {
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card">
-                      <div style="text-align:center">
-                        <img class="card-img-top" src="@item.Imagen" style="width: 220px; height:200px; margin-top:20px">
+                        <div style="text-align:center">
+                            <img class="card-img-top" src="@item.Imagen" style="width: 220px; height:200px; margin-top:20px">
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">@item.NombreProducto</h5>
-                            <p class="card-text">@item.Descripcion</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><h5 class="card-title">@item.NombreProducto</h5></li>
+                                <li class="list-group-item">@item.Descripcion</li>
+                                <li class="list-group-item">Categoría: @item.NombreCategoria</li>
+                                @* <li class="list-group-item">Proveedor: @item.NombreProveedor</li> *@
+                                <li class="list-group-item">Inventario: @item.Inventario</li>
+                                <li class="list-group-item">Precio: ¢ @item.PrecioUnitario.ToString("N2")</li>
+                            </ul>
                         </div>
+
+                        <div class="card-body row">
+                            <div class="col-3">
+                            </div>
+                            <div class="col-4">
+                                <input id="prd-@item.IdProducto" type="number" class="form-control" style="text-align:center"
+                                       value="0" min="1" max="@item.Inventario"
+                                       onkeypress="return ValidarNumeros(event)">
+                            </div>
+                            <div class="col-4">
+                                <a class="btn btn-outline-primary" 
+                                onclick="AgregarProducto(@item.IdProducto, @item.Inventario)">Añadir</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             }
@@ -34,3 +55,5 @@
 
     </div>
 </div>
+
+<script src="~/js/productoscards.js"></script>

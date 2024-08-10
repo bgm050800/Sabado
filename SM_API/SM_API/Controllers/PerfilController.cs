@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SM_API.Entitites;
-using SM_API.Models;
+using SM_API.Interfaces;
 
 namespace SM_API.Controllers
 {

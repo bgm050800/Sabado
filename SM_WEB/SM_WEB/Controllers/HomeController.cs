@@ -2,14 +2,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SM_WEB.Entities;
+using SM_WEB.Interfaces;
 using SM_WEB.Models;
 using System.Diagnostics;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SM_WEB.Controllers
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class HomeController(IUsuarioModel iUsuarioModel, IComunModel iComunModel, IRolesModel iRolesModel, IProductoModel iProductoModel) : Controller
+    public class HomeController(IUsuarioModel iUsuarioModel, 
+                                IComunModel iComunModel, 
+                                IRolesModel iRolesModel, 
+                                IProductoModel iProductoModel, 
+                                ICarritoModel iCarritoModel) : Controller
     {
         [HttpGet]
         public IActionResult Index()
@@ -100,6 +106,21 @@ namespace SM_WEB.Controllers
         [HttpGet]
         public IActionResult Principal()
         {
+            var carritoActual = iCarritoModel.ConsultarCarrito();
+            if (carritoActual.Codigo == 1)
+            {
+                var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)carritoActual.Contenido!);
+                HttpContext.Session.SetString("SubTotal", datos!.Sum(x => x.SubTotal).ToString());
+                HttpContext.Session.SetString("Cantidad", datos!.Sum(x => x.Cantidad).ToString());
+                HttpContext.Session.SetString("Total", datos!.Sum(x => x.Total).ToString());
+            }
+            else
+            {
+                HttpContext.Session.SetString("SubTotal", "0");
+                HttpContext.Session.SetString("Cantidad", "0");
+                HttpContext.Session.SetString("Total", "0");
+            }
+
             var respuesta = iProductoModel.ConsultarProductos();
 
             if (respuesta.Codigo == 1)
@@ -189,11 +210,25 @@ namespace SM_WEB.Controllers
             }
         }
 
+        [FiltroSesiones]
+        [HttpPost]
+        public IActionResult RegistrarCarrito(int IdProducto, int Cantidad)
+        {
+            var ent = new Carrito();
+            ent.ConsecutivoUsuario = HttpContext.Session.GetInt32("CONSECUTIVO")!.Value;
+            ent.IdProducto = IdProducto;
+            ent.Cantidad = Cantidad;
+
+            iCarritoModel.RegistrarCarrito(ent);
+            return Json("OK");
+        }
+
         private void CargarViewBagRoles()
         {
             var roles = iRolesModel.ConsultarRoles();
             ViewBag.Roles = JsonSerializer.Deserialize<List<SelectListItem>>((JsonElement)roles.Contenido!);
         }
+
 
     }
 }

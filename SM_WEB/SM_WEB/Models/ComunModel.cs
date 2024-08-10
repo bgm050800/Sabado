@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using SM_WEB.Interfaces;
 
 namespace SM_WEB.Models
 {

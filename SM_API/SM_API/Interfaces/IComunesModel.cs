@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace SM_API.Models
+namespace SM_API.Interfaces
 {
     public interface IComunesModel
     {

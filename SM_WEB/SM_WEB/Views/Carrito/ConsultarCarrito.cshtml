@@ -1,0 +1,56 @@
+﻿@model List<SM_WEB.Entities.Carrito>
+
+<br />
+<br />
+
+<div class="card">
+    <div class="card-body register-card-body">
+        <h4 class="login-box-msg">Consulta de carrito</h4>
+
+        <table id="tabla-Carrito" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio Unitario</th>
+                    <th>Cantidad</th>                    
+                    <th>SubTotal</th>
+                    <th>Impuesto</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td>@item.PrecioUnitario.ToString("N2")</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.SubTotal.ToString("N2")</td>
+                        <td>@item.Impuesto.ToString("N2")</td>
+                        <td>@item.Total.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <br/><br/>
+
+        <div class="row">
+          <div class="col-3">
+            <p style="font-size:14pt; margin-top:2%">El monto total a cancelar es de: ¢ 
+              <b> @decimal.Parse(Context.Session.GetString("Total")!.ToString()).ToString("N2") </b> </p>
+          </div>
+          <div>
+
+                @if (Context.Session.GetString("Total")!.ToString() != "0")
+                {
+                    <button type="submit" class="btn btn-outline-primary" style="width:200px">Pagar</button>
+                }
+
+          </div>
+        </div>
+
+        
+
+    </div>
+</div>

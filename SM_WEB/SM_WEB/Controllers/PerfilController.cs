@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SM_WEB.Entities;
-using SM_WEB.Models;
+using SM_WEB.Interfaces;
 using System.Text.Json;
 
 namespace SM_WEB.Controllers

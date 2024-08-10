@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SM_API.Interfaces;
 using SM_API.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;

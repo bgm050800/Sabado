@@ -84,6 +84,15 @@ CREATE TABLE [dbo].[tUsuario](
 ) ON [PRIMARY]
 GO
 
+SET IDENTITY_INSERT [dbo].[tCarrito] ON 
+GO
+INSERT [dbo].[tCarrito] ([IdCarrito], [ConsecutivoUsuario], [IdProducto], [Cantidad], [FechaCarrito]) VALUES (10, 1005, 1, 2, CAST(N'2024-08-10T11:01:50.753' AS DateTime))
+GO
+INSERT [dbo].[tCarrito] ([IdCarrito], [ConsecutivoUsuario], [IdProducto], [Cantidad], [FechaCarrito]) VALUES (11, 1005, 3, 1, CAST(N'2024-08-10T11:02:15.957' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[tCarrito] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[tCategoria] ON 
 GO
 INSERT [dbo].[tCategoria] ([IdCategoria], [Nombre]) VALUES (1, N'Ropa')
@@ -97,11 +106,11 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tProducto] ON 
 GO
-INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (1, N'Camiseta XL', N'Camiseta Sport del Real Madrid Númer 9', CAST(75000.00 AS Decimal(18, 2)), 1, 1, 10, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
+INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (1, N'Camiseta RM', N'Camiseta Sport del Real Madrid Númer 9', CAST(10000.00 AS Decimal(18, 2)), 1, 1, 10, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
 GO
-INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (3, N'Camiseta XL', N'Camiseta Sport del Real Madrid Númer 9', CAST(75000.00 AS Decimal(18, 2)), 1, 1, 10, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
+INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (3, N'Camiseta Bar', N'Camiseta Sport del Real Madrid Númer 9', CAST(20000.00 AS Decimal(18, 2)), 1, 1, 10, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
 GO
-INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (4, N'Camiseta XL', N'Camiseta Sport del Real Madrid Númer 9', CAST(75000.00 AS Decimal(18, 2)), 1, 1, 10, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
+INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (4, N'Camiseta MC', N'Camiseta Sport del Real Madrid Númer 9', CAST(30000.00 AS Decimal(18, 2)), 1, 1, 10, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
 GO
 SET IDENTITY_INSERT [dbo].[tProducto] OFF
 GO
@@ -236,6 +245,28 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[ConsultarCarrito]
+	@ConsecutivoUsuario INT
+AS
+BEGIN
+
+	SELECT	IdCarrito,
+			ConsecutivoUsuario,
+			C.IdProducto,
+			P.Nombre,
+			P.PrecioUnitario,
+			Cantidad,
+			FechaCarrito,
+			(C.Cantidad * P.PrecioUnitario) SubTotal,
+			(c.Cantidad * P.PrecioUnitario) * 0.13 Impuesto,
+			(C.Cantidad * P.PrecioUnitario) + (c.Cantidad * P.PrecioUnitario) * 0.13 Total
+	FROM	dbo.tCarrito C
+	INNER JOIN tProducto P ON C.IdProducto = P.IdProducto
+	WHERE ConsecutivoUsuario = @ConsecutivoUsuario
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[ConsultarProductos]
 
 AS
@@ -347,6 +378,34 @@ BEGIN
 	  WHERE Correo = @Correo
 		AND Contrasenna = @Contrasenna
 		AND Estado = 1
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[RegistrarCarrito]
+	@ConsecutivoUsuario INT,
+	@IdProducto  INT,
+	@Cantidad    INT
+AS
+BEGIN
+
+	IF EXISTS(SELECT 1 FROM tCarrito WHERE ConsecutivoUsuario = @ConsecutivoUsuario
+										AND IdProducto = @IdProducto)
+	BEGIN
+
+		UPDATE dbo.tCarrito
+		SET Cantidad = @Cantidad
+		WHERE ConsecutivoUsuario = @ConsecutivoUsuario
+										AND IdProducto = @IdProducto
+
+	END
+	ELSE
+	BEGIN
+
+		INSERT INTO dbo.tCarrito (ConsecutivoUsuario,IdProducto,Cantidad,FechaCarrito)
+		VALUES (@ConsecutivoUsuario,@IdProducto,@Cantidad,GETDATE())
+
+	END
 
 END
 GO

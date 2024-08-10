@@ -2,6 +2,7 @@
 using SM_WEB.Entities;
 using static System.Net.WebRequestMethods;
 using System.Net.Http.Headers;
+using SM_WEB.Interfaces;
 
 namespace SM_WEB.Models
 {

@@ -1,3 +1,4 @@
+using SM_WEB.Interfaces;
 using SM_WEB.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddScoped<IComunModel, ComunModel>();
 builder.Services.AddScoped<IRolesModel, RolesModel>();
 builder.Services.AddScoped<IPerfilModel, PerfilModel>();
 builder.Services.AddScoped<IProductoModel, ProductoModel>();
+builder.Services.AddScoped<ICarritoModel, CarritoModel>();
 
 var app = builder.Build();
 

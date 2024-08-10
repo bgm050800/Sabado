@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SM_API.Interfaces;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;

@@ -1,6 +1,6 @@
 ﻿using SM_WEB.Entities;
 
-namespace SM_WEB.Models
+namespace SM_WEB.Interfaces
 {
     public interface IUsuarioModel
     {

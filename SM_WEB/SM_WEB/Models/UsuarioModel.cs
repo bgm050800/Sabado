@@ -1,4 +1,5 @@
 ﻿using SM_WEB.Entities;
+using SM_WEB.Interfaces;
 using System.Net.Http.Headers;
 
 namespace SM_WEB.Models
