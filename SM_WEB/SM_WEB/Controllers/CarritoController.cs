@@ -26,8 +26,8 @@ namespace SM_WEB.Controllers
         [HttpPost]
         public ActionResult PagarCarrito()
         {
-            var carritoActual = iCarritoModel.ConsultarCarrito();
-            var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)carritoActual.Contenido!);
+            var carritoPrevioPago = iCarritoModel.ConsultarCarrito();
+            var datosPrevioPago = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)carritoPrevioPago.Contenido!);
 
             var existencias = iCarritoModel.ValidarExistencias();
 
@@ -37,9 +37,11 @@ namespace SM_WEB.Controllers
 
                 if (respuesta.Codigo == 1)
                 {
+                    var carritoActual = iCarritoModel.ConsultarCarrito();
+                    
                     if (carritoActual.Codigo == 1)
                     {
-
+                        var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)carritoActual.Contenido!);
                         HttpContext.Session.SetString("SubTotal", datos!.Sum(x => x.SubTotal).ToString());
                         HttpContext.Session.SetString("Cantidad", datos!.Sum(x => x.Cantidad).ToString());
                         HttpContext.Session.SetString("Total", datos!.Sum(x => x.Total).ToString());
@@ -56,20 +58,76 @@ namespace SM_WEB.Controllers
                 else
                 {
                     ViewBag.msj = respuesta.Mensaje;
-                    return View("ConsultarCarrito", datos);
+                    return View("ConsultarCarrito", datosPrevioPago);
                 }
             }
             else
             {
                 ViewBag.msj = existencias.Mensaje;
-                return View("ConsultarCarrito", datos);
+                return View("ConsultarCarrito", datosPrevioPago);
             }
         }
 
         [HttpGet]
         public ActionResult ConsultarFacturas()
         {
-            return View();
+            var respuesta = iCarritoModel.ConsultarFacturas();
+
+            if (respuesta.Codigo == 1)
+            {
+                var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)respuesta.Contenido!);
+                return View(datos);
+            }
+
+            return View(new List<Carrito>());
+        }
+
+        [HttpGet]
+        public ActionResult ConsultarDetalleFactura(int IdMaestro)
+        {
+            var respuesta = iCarritoModel.ConsultarDetalleFactura(IdMaestro);
+
+            if (respuesta.Codigo == 1)
+            {
+                var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)respuesta.Contenido!);
+                return View(datos);
+            }
+
+            return View(new List<Carrito>());
+        }
+
+        [HttpGet]
+        public ActionResult EliminarProductoCarrito(int IdProducto)
+        {
+            var respuesta = iCarritoModel.EliminarProductoCarrito(IdProducto);
+
+            if (respuesta.Codigo == 1)
+            {
+                var carritoActual = iCarritoModel.ConsultarCarrito();
+                if (carritoActual.Codigo == 1)
+                {
+                    var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)carritoActual.Contenido!);
+                    HttpContext.Session.SetString("SubTotal", datos!.Sum(x => x.SubTotal).ToString());
+                    HttpContext.Session.SetString("Cantidad", datos!.Sum(x => x.Cantidad).ToString());
+                    HttpContext.Session.SetString("Total", datos!.Sum(x => x.Total).ToString());
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SubTotal", "0");
+                    HttpContext.Session.SetString("Cantidad", "0");
+                    HttpContext.Session.SetString("Total", "0");
+                }
+
+                return RedirectToAction("ConsultarCarrito", "Carrito");
+            }
+            else
+            {
+                var carrito = iCarritoModel.ConsultarCarrito();
+                var datos = JsonSerializer.Deserialize<List<Carrito>>((JsonElement)carrito.Contenido!);
+
+                ViewBag.msj = respuesta.Mensaje;
+                return View("ConsultarCarrito", datos);
+            }
         }
 
     }

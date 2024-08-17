@@ -107,6 +107,37 @@ namespace SM_API.Controllers
         }
 
         [Authorize]
+        [HttpDelete]
+        [Route("EliminarProductoCarrito")]
+        public async Task<IActionResult> EliminarProductoCarrito(int IdProducto)
+        {
+            Respuesta resp = new Respuesta();
+            int ConsecutivoUsuario = int.Parse(User.Identity!.Name!);
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.ExecuteAsync("EliminarProductoCarrito",
+                    new { ConsecutivoUsuario, IdProducto },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = true;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "No se ha podido eliminar el producto de su carrito";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
+
+        [Authorize]
         [HttpGet]
         [Route("ValidarExistencias")]
         public async Task<IActionResult> ValidarExistencias()
@@ -116,11 +147,11 @@ namespace SM_API.Controllers
 
             using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
             {
-                var result = await context.ExecuteAsync("ValidarExistencias",
+                var result = await context.QueryAsync<Carrito>("ValidarExistencias",
                     new { ConsecutivoUsuario },
                     commandType: System.Data.CommandType.StoredProcedure);
 
-                if (result > 0)
+                if (result.Count() > 0)
                 {
                     resp.Codigo = 0;
                     resp.Mensaje = "Hay productos de su carrito que superan la cantidad disponible del inventario";
@@ -137,7 +168,66 @@ namespace SM_API.Controllers
             }
         }
 
-        
+        [Authorize]
+        [HttpGet]
+        [Route("ConsultarFacturas")]
+        public async Task<IActionResult> ConsultarFacturas()
+        {
+            Respuesta resp = new Respuesta();
+            int ConsecutivoUsuario = int.Parse(User.Identity!.Name!);
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.QueryAsync<Carrito>("ConsultarFacturas",
+                    new { ConsecutivoUsuario },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result.Count() > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = result;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "No hay facturas registradas en este momento.";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("ConsultarDetalleFactura")]
+        public async Task<IActionResult> ConsultarDetalleFactura(int IdMaestro)
+        {
+            Respuesta resp = new Respuesta();
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.QueryAsync<Carrito>("ConsultarDetalleFactura",
+                    new { IdMaestro },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result.Count() > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = result;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "No hay detalles registrados en esta factura.";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
 
     }
 }

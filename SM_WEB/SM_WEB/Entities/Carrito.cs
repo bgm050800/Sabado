@@ -11,5 +11,8 @@
         public decimal SubTotal { get; set; }
         public decimal Impuesto { get; set; }
         public decimal Total { get; set; }
+
+        public int IdMaestro { get; set; }
+        public DateTime FechaCompra { get; set; }
     }
 }

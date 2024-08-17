@@ -5,7 +5,7 @@
 
 <div class="card">
     <div class="card-body register-card-body">
-        <h4 class="login-box-msg">Mis compras</h4>
+        <h4 class="login-box-msg">Factura # @Model.FirstOrDefault()!.IdMaestro</h4>
 
         @if (ViewBag.msj != null)
         {
@@ -17,28 +17,24 @@
         <table id="tabla-Carrito" class="table table-hover">
             <thead>
                 <tr>
-                    <th># Factura</th>
-                    <th>Fecha Compra</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
                     <th>SubTotal</th>
                     <th>Impuesto</th>
                     <th>Total</th>
-                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.IdMaestro</td>
-                        <td>@item.FechaCompra.ToString("dd/MM/yyyy hh:mm:ss tt")</td>               
+                        <td>@item.IdProducto - @item.Nombre</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.PrecioUnitario.ToString("N2")</td>
                         <td>@item.SubTotal.ToString("N2")</td>
                         <td>@item.Impuesto.ToString("N2")</td>
                         <td>@item.Total.ToString("N2")</td>
-                        <td>
-                            <a class="btn btn-primary" href="@Url.Action("ConsultarDetalleFactura","Carrito", new { IdMaestro = item.IdMaestro })">
-                                <i class="fa fa-eye"></i>
-                            </a>
-                        </td>
                     </tr>
                 }
             </tbody>

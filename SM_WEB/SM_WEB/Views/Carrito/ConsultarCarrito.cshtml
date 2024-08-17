@@ -7,6 +7,13 @@
     <div class="card-body register-card-body">
         <h4 class="login-box-msg">Consulta de carrito</h4>
 
+        @if (ViewBag.msj != null)
+        {
+            <div class="alert alert-info" style="text-align:center" role="alert">
+                @ViewBag.msj
+            </div>
+        }
+
         <table id="tabla-Carrito" class="table table-hover">
             <thead>
                 <tr>
@@ -16,6 +23,7 @@
                     <th>SubTotal</th>
                     <th>Impuesto</th>
                     <th>Total</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +36,11 @@
                         <td>@item.SubTotal.ToString("N2")</td>
                         <td>@item.Impuesto.ToString("N2")</td>
                         <td>@item.Total.ToString("N2")</td>
+                        <td>
+                            <a class="btn btn-primary" href="@Url.Action("EliminarProductoCarrito","Carrito", new { IdProducto = item.IdProducto })">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                        </td>
                     </tr>
                 }
             </tbody>

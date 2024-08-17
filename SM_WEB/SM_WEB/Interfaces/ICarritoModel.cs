@@ -11,5 +11,11 @@ namespace SM_WEB.Interfaces
         Respuesta PagarCarrito();
 
         Respuesta ValidarExistencias();
+
+        Respuesta ConsultarFacturas();
+
+        Respuesta ConsultarDetalleFactura(int IdMaestro);
+
+        Respuesta EliminarProductoCarrito(int IdProducto);
     }
 }

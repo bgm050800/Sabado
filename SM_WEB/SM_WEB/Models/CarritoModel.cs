@@ -38,6 +38,20 @@ namespace SM_WEB.Models
                 return new Respuesta();
         }
 
+        public Respuesta EliminarProductoCarrito(int IdProducto)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Carrito/EliminarProductoCarrito?IdProducto=" + IdProducto ;
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var result = http.DeleteAsync(url).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
         public Respuesta PagarCarrito()
         {
             string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Carrito/PagarCarrito";
@@ -65,6 +79,35 @@ namespace SM_WEB.Models
             else
                 return new Respuesta();
         }
+
+        public Respuesta ConsultarFacturas()
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Carrito/ConsultarFacturas";
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var result = http.GetAsync(url).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
+        public Respuesta ConsultarDetalleFactura(int IdMaestro)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Carrito/ConsultarDetalleFactura?IdMaestro=" + IdMaestro;
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var result = http.GetAsync(url).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+           
 
     }
 }
