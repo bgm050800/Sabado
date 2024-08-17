@@ -7,5 +7,9 @@ namespace SM_WEB.Interfaces
         Respuesta RegistrarCarrito(Carrito ent);
 
         Respuesta ConsultarCarrito();
+
+        Respuesta PagarCarrito();
+
+        Respuesta ValidarExistencias();
     }
 }

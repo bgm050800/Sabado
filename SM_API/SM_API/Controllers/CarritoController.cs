@@ -74,6 +74,69 @@ namespace SM_API.Controllers
                 }
             }
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("PagarCarrito")]
+        public async Task<IActionResult> PagarCarrito()
+        {
+            Respuesta resp = new Respuesta();
+            int ConsecutivoUsuario = int.Parse(User.Identity!.Name!);
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.ExecuteAsync("PagarCarrito",
+                    new { ConsecutivoUsuario },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = true;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "Su carrito no ha sido cancelado correctamente";
+                    resp.Contenido = false;
+                    return Ok(resp);
+                }
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("ValidarExistencias")]
+        public async Task<IActionResult> ValidarExistencias()
+        {
+            Respuesta resp = new Respuesta();
+            int ConsecutivoUsuario = int.Parse(User.Identity!.Name!);
+
+            using (var context = new SqlConnection(iConfiguration.GetSection("ConnectionStrings:DefaultConnection").Value))
+            {
+                var result = await context.ExecuteAsync("ValidarExistencias",
+                    new { ConsecutivoUsuario },
+                    commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    resp.Codigo = 0;
+                    resp.Mensaje = "Hay productos de su carrito que superan la cantidad disponible del inventario";
+                    resp.Contenido = result;
+                    return Ok(resp);
+                }
+                else
+                {
+                    resp.Codigo = 1;
+                    resp.Mensaje = "OK";
+                    resp.Contenido = true;
+                    return Ok(resp);
+                }
+            }
+        }
+
         
 
     }

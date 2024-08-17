@@ -33,19 +33,30 @@
                             </ul>
                         </div>
 
-                        <div class="card-body row">
-                            <div class="col-3">
+                        @if (item.Inventario >= 0)
+                        {
+                            <div class="card-body row">
+                                <div class="col-3">
+                                </div>
+                                <div class="col-4">
+                                    <input id="prd-@item.IdProducto" type="number" class="form-control" style="text-align:center"
+                                           value="0" min="1" max="@item.Inventario"
+                                           onkeypress="return ValidarNumeros(event)">
+                                </div>
+                                <div class="col-4">
+                                    <a class="btn btn-outline-primary"
+                                       onclick="AgregarProducto(@item.IdProducto, @item.Inventario)">Añadir</a>
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <input id="prd-@item.IdProducto" type="number" class="form-control" style="text-align:center"
-                                       value="0" min="1" max="@item.Inventario"
-                                       onkeypress="return ValidarNumeros(event)">
+                        }
+                        else
+                        {
+                            <div class="card-body row">
+                                <div class="col-12" style="text-align:center">
+                                    <p style="font-size:12pt; color:red; font-weight: bold">AGOTADO</p>
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <a class="btn btn-outline-primary" 
-                                onclick="AgregarProducto(@item.IdProducto, @item.Inventario)">Añadir</a>
-                            </div>
-                        </div>
+                        }
 
                     </div>
                 </div>

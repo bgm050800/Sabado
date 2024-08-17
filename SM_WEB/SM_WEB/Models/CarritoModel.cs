@@ -38,6 +38,33 @@ namespace SM_WEB.Models
                 return new Respuesta();
         }
 
-        
+        public Respuesta PagarCarrito()
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Carrito/PagarCarrito";
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var result = http.PostAsync(url, null).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
+        public Respuesta ValidarExistencias()
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Carrito/ValidarExistencias";
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var result = http.GetAsync(url).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
     }
 }

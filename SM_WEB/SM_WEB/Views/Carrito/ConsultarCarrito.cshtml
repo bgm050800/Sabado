@@ -44,7 +44,10 @@
 
                 @if (Context.Session.GetString("Total")!.ToString() != "0")
                 {
-                    <button type="submit" class="btn btn-outline-primary" style="width:200px">Pagar</button>
+                    @using (Html.BeginForm("PagarCarrito", "Carrito"))
+                    { 
+                      <button type="submit" class="btn btn-outline-primary" style="width:200px">Pagar</button>
+                    }
                 }
 
           </div>
