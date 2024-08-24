@@ -126,7 +126,7 @@ namespace SM_WEB.Controllers
             if (respuesta.Codigo == 1)
             {
                 var datos = JsonSerializer.Deserialize<List<Producto>>((JsonElement)respuesta.Contenido!);
-                return View(datos);
+                return View(datos!.Where(x => x.Estado == true).ToList());
             }
 
             return View(new List<Producto>());
@@ -209,6 +209,8 @@ namespace SM_WEB.Controllers
                 return View();
             }
         }
+
+
 
         [FiltroSesiones]
         [HttpPost]

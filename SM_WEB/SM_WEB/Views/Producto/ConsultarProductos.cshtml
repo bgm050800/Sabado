@@ -1,0 +1,89 @@
+﻿@model List<SM_WEB.Entities.Producto>
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+
+<div class="card">
+    <div class="card-body register-card-body">
+        <h4 class="login-box-msg">Consulta de productos</h4>
+
+        <table id="tabla-Productos" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id Producto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio Unitario</th>
+                    <th>Cateogoría</th>
+                    <th>Proveedor</th>
+                    <th>Inventario</th>
+                    <th>Imagen</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.IdProducto</td>
+                        <td>@item.NombreProducto</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.PrecioUnitario.ToString("N2")</td>
+                        <td>@item.NombreCategoria</td>
+                        <td>@item.NombreProveedor</td>
+                        <td>@item.Inventario</td>
+                        <td><img class="card-img-top" src="@item.Imagen" style="width: 120px; height:100px; margin-top:20px"></td>
+                        <td>@item.EstadoDescripcion</td>
+                        <td>
+
+                            <button type="button" class="btn btn-primary Modales" data-toggle="modal" data-target="#ModalProductos"
+                                    data-id=@item.IdProducto data-name="@item.NombreProducto">
+                                <i class="fa fa-undo"></i>
+                            </button>
+
+                            <a class="btn btn-primary" href="@Url.Action("","", new { q = 0 })">
+                                <i class="fa fa-tag"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="modal fade" id="ModalProductos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmar Acciones</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("CambiarEstadoProducto", "Producto"))
+            {
+                <div class="modal-body">
+                    @Html.Hidden("IdProducto", "")
+                    ¿Desea cambiar el estado del producto <label id="NombreProducto"></label>?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"> <i class="fa fa-check"></i></button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script src="~/page/jquery/jquery.min.js"></script>
+<script src="~/js/ConsultaProductos.js"></script>

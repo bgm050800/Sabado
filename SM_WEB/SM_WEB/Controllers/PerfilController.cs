@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace SM_WEB.Controllers
 {
+    [FiltroSesiones]
     public class PerfilController(IUsuarioModel iUsuarioModel, IPerfilModel iPerfilModel) : Controller
     {
         [HttpGet]

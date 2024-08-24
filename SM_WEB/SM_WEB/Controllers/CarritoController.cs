@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace SM_WEB.Controllers
 {
+    [FiltroSesiones]
     public class CarritoController(ICarritoModel iCarritoModel) : Controller
     {
         [HttpGet]

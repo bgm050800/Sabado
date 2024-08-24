@@ -22,5 +22,22 @@ namespace SM_WEB.Models
                 return new Respuesta();
         }
 
+        public Respuesta CambiarEstadoProducto(Producto ent)
+        {
+            string url = iConfiguration.GetSection("Llaves:UrlApi").Value + "Producto/CambiarEstadoProducto";
+            string token = iAccesor.HttpContext!.Session.GetString("TOKEN")!.ToString();
+
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            JsonContent body = JsonContent.Create(ent);
+            var result = http.PutAsync(url, body).Result;
+
+            if (result.IsSuccessStatusCode)
+                return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
+            else
+                return new Respuesta();
+        }
+
+        
+
     }
 }

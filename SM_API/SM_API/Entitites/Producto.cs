@@ -13,6 +13,7 @@
         public int Inventario { get; set; }
         public string? Imagen { get; set; }
         public bool Estado { get; set; }
+        public string? EstadoDescripcion { get; set; }
 
     }
 }

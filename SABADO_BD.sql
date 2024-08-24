@@ -114,13 +114,6 @@ CREATE TABLE [dbo].[tUsuario](
 ) ON [PRIMARY]
 GO
 
-SET IDENTITY_INSERT [dbo].[tCarrito] ON 
-GO
-INSERT [dbo].[tCarrito] ([IdCarrito], [ConsecutivoUsuario], [IdProducto], [Cantidad], [FechaCarrito]) VALUES (29, 1004, 1, 8, CAST(N'2024-08-17T10:52:10.813' AS DateTime))
-GO
-SET IDENTITY_INSERT [dbo].[tCarrito] OFF
-GO
-
 SET IDENTITY_INSERT [dbo].[tCategoria] ON 
 GO
 INSERT [dbo].[tCategoria] ([IdCategoria], [Nombre]) VALUES (1, N'Ropa')
@@ -146,29 +139,37 @@ INSERT [dbo].[tDetalle] ([IdDetalle], [IdMaestro], [IdProducto], [Cantidad], [Pr
 GO
 INSERT [dbo].[tDetalle] ([IdDetalle], [IdMaestro], [IdProducto], [Cantidad], [PrecioUnitario], [SubTotal], [Impuesto], [Total]) VALUES (15, 10, 3, 4, CAST(20000.00 AS Decimal(18, 2)), CAST(80000.00 AS Decimal(18, 2)), CAST(10400.00 AS Decimal(18, 2)), CAST(90400.00 AS Decimal(18, 2)))
 GO
+INSERT [dbo].[tDetalle] ([IdDetalle], [IdMaestro], [IdProducto], [Cantidad], [PrecioUnitario], [SubTotal], [Impuesto], [Total]) VALUES (16, 11, 1, 1, CAST(10000.00 AS Decimal(18, 2)), CAST(10000.00 AS Decimal(18, 2)), CAST(1300.00 AS Decimal(18, 2)), CAST(11300.00 AS Decimal(18, 2)))
+GO
+INSERT [dbo].[tDetalle] ([IdDetalle], [IdMaestro], [IdProducto], [Cantidad], [PrecioUnitario], [SubTotal], [Impuesto], [Total]) VALUES (17, 12, 4, 5, CAST(30000.00 AS Decimal(18, 2)), CAST(150000.00 AS Decimal(18, 2)), CAST(19500.00 AS Decimal(18, 2)), CAST(169500.00 AS Decimal(18, 2)))
+GO
 SET IDENTITY_INSERT [dbo].[tDetalle] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[tMaestro] ON 
 GO
-INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (7, 1004, CAST(N'2024-08-17T10:15:45.020' AS DateTime), CAST(20000.00 AS Decimal(18, 2)), CAST(2600.00 AS Decimal(18, 2)), CAST(22600.00 AS Decimal(18, 2)))
+INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (7, 1004, CAST(N'2024-03-17T10:15:45.020' AS DateTime), CAST(20000.00 AS Decimal(18, 2)), CAST(2600.00 AS Decimal(18, 2)), CAST(22600.00 AS Decimal(18, 2)))
 GO
-INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (8, 1005, CAST(N'2024-08-17T10:23:42.057' AS DateTime), CAST(10000.00 AS Decimal(18, 2)), CAST(1300.00 AS Decimal(18, 2)), CAST(11300.00 AS Decimal(18, 2)))
+INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (8, 1005, CAST(N'2024-03-18T10:23:42.057' AS DateTime), CAST(10000.00 AS Decimal(18, 2)), CAST(1300.00 AS Decimal(18, 2)), CAST(11300.00 AS Decimal(18, 2)))
 GO
-INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (9, 1005, CAST(N'2024-08-17T10:39:37.770' AS DateTime), CAST(30000.00 AS Decimal(18, 2)), CAST(3900.00 AS Decimal(18, 2)), CAST(33900.00 AS Decimal(18, 2)))
+INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (9, 1005, CAST(N'2024-04-19T10:39:37.770' AS DateTime), CAST(30000.00 AS Decimal(18, 2)), CAST(3900.00 AS Decimal(18, 2)), CAST(339000.00 AS Decimal(18, 2)))
 GO
-INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (10, 1004, CAST(N'2024-08-17T10:51:19.533' AS DateTime), CAST(190000.00 AS Decimal(18, 2)), CAST(24700.00 AS Decimal(18, 2)), CAST(214700.00 AS Decimal(18, 2)))
+INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (10, 1004, CAST(N'2024-04-20T10:51:19.533' AS DateTime), CAST(190000.00 AS Decimal(18, 2)), CAST(24700.00 AS Decimal(18, 2)), CAST(214700.00 AS Decimal(18, 2)))
+GO
+INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (11, 1005, CAST(N'2024-05-21T08:29:14.033' AS DateTime), CAST(10000.00 AS Decimal(18, 2)), CAST(1300.00 AS Decimal(18, 2)), CAST(11300.00 AS Decimal(18, 2)))
+GO
+INSERT [dbo].[tMaestro] ([IdMaestro], [Consecutivo], [Fecha], [SubTotal], [Impuesto], [Total]) VALUES (12, 1004, CAST(N'2024-05-22T08:49:06.230' AS DateTime), CAST(150000.00 AS Decimal(18, 2)), CAST(19500.00 AS Decimal(18, 2)), CAST(169500.00 AS Decimal(18, 2)))
 GO
 SET IDENTITY_INSERT [dbo].[tMaestro] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[tProducto] ON 
 GO
-INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (1, N'Camiseta RM', N'Camiseta Sport del Real Madrid Númer 9', CAST(10000.00 AS Decimal(18, 2)), 1, 1, 13, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
+INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (1, N'Camiseta RM', N'Camiseta Sport del Real Madrid Númer 9', CAST(10000.00 AS Decimal(18, 2)), 1, 1, 12, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
 GO
 INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (3, N'Camiseta Bar', N'Camiseta Sport del Real Madrid Númer 9', CAST(20000.00 AS Decimal(18, 2)), 1, 1, 16, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
 GO
-INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (4, N'Camiseta MC', N'Camiseta Sport del Real Madrid Númer 9', CAST(30000.00 AS Decimal(18, 2)), 1, 1, 5, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
+INSERT [dbo].[tProducto] ([IdProducto], [Nombre], [Descripcion], [PrecioUnitario], [IdCategoria], [IdProveedor], [Inventario], [Imagen], [Estado]) VALUES (4, N'Camiseta MC', N'Camiseta Sport del Real Madrid Númer 9', CAST(30000.00 AS Decimal(18, 2)), 1, 1, 0, N'https://th.bing.com/th/id/OIP._qIym2Dp8vJp5mqULak_-AAAAA?rs=1&pid=ImgDetMain', 1)
 GO
 SET IDENTITY_INSERT [dbo].[tProducto] OFF
 GO
@@ -197,11 +198,11 @@ GO
 
 SET IDENTITY_INSERT [dbo].[tUsuario] ON 
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1003, N'304590415', N'ecalvo90415@ufide.ac.cr', N'gWYGxPMLmwncMqU1dU1F9A==', N'Eduardo Calvo Castillo', 1, 1, 1, CAST(N'2024-07-27T11:38:59.820' AS DateTime))
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1003, N'304590415', N'ecalvo90415@ufide.ac.cr', N'gWYGxPMLmwncMqU1dU1F9A==', N'Eduardo Calvo Castillo', 0, 1, 1, CAST(N'2024-07-27T11:38:59.820' AS DateTime))
 GO
 INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1004, N'117040465', N'bgonzalez40465@ufide.ac.cr', N'//L9diz6oFCPvLvFCKZjZQ==', N'Byron González Muñoz', 1, 1, 0, CAST(N'2024-08-17T09:15:53.637' AS DateTime))
 GO
-INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1005, N'117020932', N'bruiz20932@ufide.ac.cr', N'//L9diz6oFCPvLvFCKZjZQ==', N'Brandon Ruíz', 1, 1, 0, CAST(N'2024-08-17T09:11:07.623' AS DateTime))
+INSERT [dbo].[tUsuario] ([Consecutivo], [Identificacion], [Correo], [Contrasenna], [Nombre], [Estado], [IdRol], [EsTemporal], [VigenciaTemporal]) VALUES (1005, N'117020932', N'bruiz20932@ufide.ac.cr', N'//L9diz6oFCPvLvFCKZjZQ==', N'Brandon Ruíz', 1, 2, 0, CAST(N'2024-08-17T09:11:07.623' AS DateTime))
 GO
 SET IDENTITY_INSERT [dbo].[tUsuario] OFF
 GO
@@ -309,6 +310,18 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[CambiarEstadoProducto]
+	@IdProducto INT
+AS
+BEGIN
+	
+	UPDATE tProducto
+	SET Estado = CASE WHEN Estado = 1 THEN 0 ELSE 1 END
+	WHERE IdProducto = @IdProducto
+
+END
+GO
+
 CREATE PROCEDURE [dbo].[CambiarEstadoUsuario]
 	@Consecutivo INT
 AS
@@ -339,6 +352,25 @@ BEGIN
 	FROM	dbo.tCarrito C
 	INNER JOIN tProducto P ON C.IdProducto = P.IdProducto
 	WHERE ConsecutivoUsuario = @ConsecutivoUsuario
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarClientes]
+
+AS
+BEGIN
+
+--463 300.00
+
+	SET LANGUAGE Spanish
+
+	SELECT	SUM(Total) 'Total',
+			DATENAME(MONTH, DATEADD(MONTH, MONTH(Fecha), -1)) 'NombreMes',
+			DATEPART(MONTH,Fecha) 'NumeroMes'
+	FROM	tMaestro
+	GROUP BY DATEPART(MONTH,Fecha)
+	ORDER BY DATEPART(MONTH,Fecha)
 
 END
 GO
@@ -396,10 +428,30 @@ BEGIN
 			prov.Nombre 'NombreProveedor',
 			Inventario,
 			Imagen,
-			Estado
+			Estado,
+			CASE WHEN Estado = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END EstadoDescripcion
 	  FROM	dbo.tProducto prod
 	  INNER JOIN dbo.tCategoria cat ON prod.IdCategoria = cat.IdCategoria
 	  INNER JOIN dbo.tProveedor prov ON prod.IdProveedor = prov.IdProveedor
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarProductosVendidos]
+
+AS
+BEGIN
+
+--463 300.00
+
+	SELECT	SUM(Cantidad) 'Cantidad',
+			Nombre,
+			DATEPART(MONTH,FECHA) 'Mes'
+	FROM	tDetalle D
+	INNER JOIN tMaestro M ON D.IdMaestro = M.IdMaestro
+	INNER JOIN tProducto P ON D.IdProducto = P.IdProducto
+	GROUP BY Nombre, DATEPART(MONTH,FECHA)
+	ORDER BY SUM(Cantidad) DESC
 
 END
 GO
@@ -470,6 +522,25 @@ BEGIN
 			R.Descripcion
 	  FROM	dbo.tUsuario U
 	  INNER JOIN dbo.tRol R ON U.IdRol = R.IdRol
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[ConsultarVentas]
+
+AS
+BEGIN
+
+--463 300.00
+
+	SET LANGUAGE Spanish
+
+	SELECT	SUM(Total) 'Total',
+			DATENAME(MONTH, DATEADD(MONTH, MONTH(Fecha), -1)) 'NombreMes',
+			DATEPART(MONTH,Fecha) 'NumeroMes'
+	FROM	tMaestro
+	GROUP BY DATEPART(MONTH,Fecha)
+	ORDER BY DATEPART(MONTH,Fecha)
 
 END
 GO
