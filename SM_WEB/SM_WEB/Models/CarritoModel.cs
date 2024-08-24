@@ -35,7 +35,7 @@ namespace SM_WEB.Models
             if (result.IsSuccessStatusCode)
                 return result.Content.ReadFromJsonAsync<Respuesta>().Result!;
             else
-                return new Respuesta();
+                throw new Exception("Respuesta incorrecta del servicio");
         }
 
         public Respuesta EliminarProductoCarrito(int IdProducto)

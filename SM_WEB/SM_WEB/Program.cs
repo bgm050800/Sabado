@@ -17,10 +17,11 @@ builder.Services.AddScoped<ICarritoModel, CarritoModel>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
+{   
     app.UseHsts();
 }
+
+app.UseExceptionHandler("/Error/MostrarError");
 
 app.UseSession();
 
